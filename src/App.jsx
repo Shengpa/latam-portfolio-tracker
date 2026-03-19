@@ -71,11 +71,11 @@ export default function App() {
     ).join("\n");
     const prompt = `Soy un inversor argentino. Mi portfolio:\n${portfolioSummary}\n\nTotal USD: ${formatUSD(totalUSD)}\nP&L: ${formatPct(totalPnLPct)}\nDistribución: ${typeBreakdown.map(t => `${t.type}: ${t.pct.toFixed(1)}%`).join(", ")}\nDólar MEP: $${USD_MEP}\n\nAnalizá: 1) Concentración 2) Riesgo por instrumento 3) Exposición argentina vs internacional 4) 2-3 recomendaciones concretas. Sé directo, en español.`;
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] }),
-      });
+      const response = await fetch("/api/analyze", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ messages: [{ role: "user", content: prompt }] }),
+});
       const data = await response.json();
       setAiAnalysis(data.content?.map((c) => c.text || "").join("") || "");
     } catch (e) { setAiError("Error al contactar la IA. Intentá de nuevo."); }
